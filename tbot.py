@@ -73,7 +73,7 @@ def register_workers(scheduler: AsyncIOScheduler) -> List[Coroutine]:
     scheduler.add_job(update_public_notices, trigger=IntervalTrigger(hours=24))
     scheduler.add_job(check_public_notices, trigger=IntervalTrigger(hours=6), args=(bot,))
     return [
-        #update_public_notices(),  # todo: uncomment
+        update_public_notices(),
         check_public_notices(bot)
     ]
 
