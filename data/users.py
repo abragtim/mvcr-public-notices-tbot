@@ -6,7 +6,7 @@ from typing import Set, Optional
 @dataclass(frozen=True)
 class User:
     id: int
-    application_number: str
+    application_number: Optional[str]
 
 
 class UsersStorage:

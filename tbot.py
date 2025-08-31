@@ -54,6 +54,11 @@ async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """
+    user_storage.update(User(
+        id=message.from_user.id,
+        application_number=None
+    ))
+
     if not is_user_allowed(message.from_user.id):
         await send_unauthorized_message(message)
         return
