@@ -27,10 +27,26 @@ from workers.check_public_notices import check_public_notices
 load_dotenv(".env")
 
 TOKEN = os.getenv("BOT_TOKEN")
+ALLOWED_USER_IDS = set(map(int, os.getenv("ALLOWED_USER_IDS", "").split(","))) if os.getenv("ALLOWED_USER_IDS") else set()
 
 user_storage = UsersStorage()
 dp = Dispatcher()
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
+
+def is_user_allowed(user_id: int) -> bool:
+    """Check if user is allowed to use the bot"""
+    return user_id in ALLOWED_USER_IDS
+
+
+async def send_unauthorized_message(message: Message) -> None:
+    """Send message to unauthorized users"""
+    await message.answer(
+        "🔒 This is a private bot for personal use only.\n\n"
+        "We do not want to work with any personal information and GDPR restrictions, "
+        "so you can just delete this bot.\n\n"
+        "Thank you for understanding!"
+    )
 
 
 @dp.message(CommandStart())
@@ -38,6 +54,10 @@ async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """
+    if not is_user_allowed(message.from_user.id):
+        await send_unauthorized_message(message)
+        return
+
     await message.answer(
         f"Hello, {html.bold(message.from_user.full_name)}! "
         f"Send me your application number, and I will track the public notices for you.")
@@ -45,6 +65,10 @@ async def command_start_handler(message: Message) -> None:
 
 @dp.message(CheckByApplication())
 async def check_by_application_number(message: Message) -> None:
+    if not is_user_allowed(message.from_user.id):
+        await send_unauthorized_message(message)
+        return
+
     user = UsersStorage().get_by_id(message.from_user.id)
     if user is None:
         await message.answer("I am not currently tracking your application. "
@@ -59,6 +83,10 @@ async def check_by_application_number(message: Message) -> None:
 
 @dp.message()
 async def begin_application_tracking(message: Message) -> None:
+    if not is_user_allowed(message.from_user.id):
+        await send_unauthorized_message(message)
+        return
+
     user_storage.update(User(
         id=message.from_user.id,
         application_number=message.text))
