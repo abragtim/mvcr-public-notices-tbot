@@ -40,7 +40,9 @@ def is_user_allowed(user_id: int) -> bool:
 
 
 async def send_unauthorized_message(message: Message) -> None:
-    """Send message to unauthorized users"""
+    """
+    Send message to unauthorized users
+    """
     await message.answer(
         "🔒 This is a private bot for personal use only.\n\n"
         "We do not want to work with any personal information and GDPR restrictions, "
