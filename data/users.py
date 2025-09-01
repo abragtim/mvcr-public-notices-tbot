@@ -1,4 +1,5 @@
 import json
+import os.path
 from dataclasses import dataclass, asdict
 from typing import Set, Optional
 
@@ -37,6 +38,8 @@ class UsersStorage:
 
     @staticmethod
     def get_all() -> Set[User]:
+        if not os.path.exists(UsersStorage.__PATH_TO_USERS_JSON):
+            return set()
         with open(UsersStorage.__PATH_TO_USERS_JSON, 'r') as fd:
             return {User(**user) for user in json.load(fd)}
 
