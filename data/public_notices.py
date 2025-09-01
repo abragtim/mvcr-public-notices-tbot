@@ -1,4 +1,5 @@
 import json
+import os
 
 from dataclasses import asdict
 from typing import List, Dict
@@ -12,6 +13,8 @@ class PublicNoticesStorage:
 
     @staticmethod
     def get() -> List[PublicNotice]:
+        if not os.path.exists(PublicNoticesStorage.__PATH_TO_PUBLIC_NOTICES_JSON):
+            return []
         with open(PublicNoticesStorage.__PATH_TO_PUBLIC_NOTICES_JSON, 'r') as fd:
             notices_json = json.load(fd)
         return [PublicNotice(**notice_json) for notice_json in notices_json]
