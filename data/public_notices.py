@@ -8,7 +8,7 @@ from utils.application_number_transformations import transform_to_lower_resoluti
 
 
 class PublicNoticesStorage:
-    __PATH_TO_PUBLIC_NOTICES_JSON = 'data/storage/public_notices.json'
+    __PATH_TO_PUBLIC_NOTICES_JSON = '/app/data/storage/public_notices.json'
 
     @staticmethod
     def get() -> List[PublicNotice]:

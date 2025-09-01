@@ -10,7 +10,7 @@ class User:
 
 
 class UsersStorage:
-    __PATH_TO_USERS_JSON = 'data/storage/users.json'
+    __PATH_TO_USERS_JSON = '/app/data/storage/users.json'
 
     @staticmethod
     def get_by_id(user_id: int) -> Optional[User]:
